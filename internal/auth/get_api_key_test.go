@@ -40,7 +40,7 @@ func TestGetAPIKey(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		t.Run(fmt.Sprintf("TestGetAPIKey Case #%v:", i), func(t *testing.T) {
+		`t.Run(fmt.Sprintf("TestGetAPIKey Case #%v:", i), func(t *testing.T) {
 			header := http.Header{}
 			header.Add(test.key, test.value)
 

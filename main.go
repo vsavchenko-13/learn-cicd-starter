@@ -30,6 +30,11 @@ func main() {
 		log.Printf("warning: assuming default configuration. .env unreadable: %v", err)
 	}
 
+	func unused() {
+		// this function does nothing
+		// and is called nowhere
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("PORT environment variable is not set")

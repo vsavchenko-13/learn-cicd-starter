@@ -32,19 +32,23 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 		w.WriteHeader(http.StatusInternalServerError)
 		errorResponse := map[string]string{"error": "Internal Server Error", "message": "Failed to marshal the response payload"}
 		// If marshaling the error response also fails, just write a generic message
-		if dat, marshalErr := json.Marshal(errorResponse); marshalErr == nil {
-			w.Write(dat)
-		} else {
+		dat, marshalErr := json.Marshal(errorResponse)
+		if marshalErr != nil {
 			http.Error(w, "Failed to generate error response", http.StatusInternalServerError)
+			return
+		}
+		// Check for error while writing the response
+		if _, writeErr := w.Write(dat); writeErr != nil {
+			// Log the write error
+			log.Printf("Error writing error response: %s", writeErr)
 		}
 		return
 	}
 
 	// Set the correct status code and write the marshaled data to the response body
 	w.WriteHeader(code)
-	_, writeErr := w.Write(dat)
-	if writeErr != nil {
-		// If an error occurred while writing the response, log it
+	if _, writeErr := w.Write(dat); writeErr != nil {
+		// Log the write error
 		log.Printf("Error writing response: %s", writeErr)
 	}
 }
